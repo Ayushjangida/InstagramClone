@@ -6,15 +6,23 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.SaveCallback;
+
+import java.util.List;
 
 public class SignUpActivity extends AppCompatActivity {
     EditText boxerName, punchSpeed, punchPower, kickSpeed, kickpower;
     Button saveButton;
+    TextView txtGetData;
+    String allKickBoxers;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +33,28 @@ public class SignUpActivity extends AppCompatActivity {
         punchPower = findViewById(R.id.edt_punch_power);
         kickSpeed = findViewById(R.id.edt_kick_speed);
         kickpower = findViewById(R.id.edt_kick_power);
+        txtGetData = findViewById(R.id.txt_get_data);
+
+        txtGetData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                allKickBoxers = "";
+                ParseQuery<ParseObject> queryAll = ParseQuery.getQuery("KickBoxer");
+                queryAll.findInBackground(new FindCallback<ParseObject>() {
+                    @Override
+                    public void done(List<ParseObject> objects, ParseException e) {
+                       if(objects.size() > 0 && e == null)  {
+                           for(ParseObject parseObject : objects)   {
+                               allKickBoxers = allKickBoxers + parseObject.get("name") + "\n";
+                           }
+                           Toast.makeText(SignUpActivity.this, allKickBoxers, Toast.LENGTH_LONG).show();
+                       }    else    {
+                           Toast.makeText(SignUpActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                       }
+                    }
+                });
+            }
+        });
     }
 
 //    public void helloWorldTapped(View view)  {
