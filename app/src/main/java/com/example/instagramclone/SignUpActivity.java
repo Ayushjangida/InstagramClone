@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -26,6 +28,15 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         edtEmail = findViewById(R.id.edt_email_signup);
         edtUsername = findViewById(R.id.edt_username_signup);
         edtPassword = findViewById(R.id.edt_password_signup);
+        edtPassword.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
+                    onClick(btnSignUp);
+                }
+                return false;
+            }
+        });
         btnSignUp = findViewById(R.id.btn_signup_signup);
         btnLogin = findViewById(R.id.btn_login_signup);
 
@@ -40,6 +51,13 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId())  {
             case R.id.btn_signup_signup :
+                if( edtEmail.getText().toString().equals("")
+                        || edtUsername.getText().toString().equals("")
+                        || edtPassword.getText().toString().equals("")) {
+
+                    Toast.makeText(SignUpActivity.this, "Empty field is not allowed", Toast.LENGTH_SHORT).show();
+                    break;
+                }
                 final ParseUser user = new ParseUser();
                 user.setEmail(edtEmail.getText().toString());
                 user.setUsername(edtUsername.getText().toString());
@@ -64,6 +82,16 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
             default:
                 break;
+        }
+    }
+
+    public void rootLayoutTapped(View view) {
+
+        try {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }   catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

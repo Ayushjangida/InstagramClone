@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -23,6 +25,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         edtEmail = findViewById(R.id.edt_email_login);
         edtPassword = findViewById(R.id.edt_password_login);
+        edtPassword.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
+                    onClick(btnLogin);
+                }
+                return false;
+            }
+        });
         btnLogin = findViewById(R.id.btn_login_login);
         btnSignUp = findViewById(R.id.btn_signup_login);
 
@@ -34,6 +45,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId())  {
             case R.id.btn_login_login :
+                if (edtEmail.getText().toString().equals("") || edtPassword.getText().toString().equals(""))    {
+                    Toast.makeText(LoginActivity.this, "Please enter Email/Password", Toast.LENGTH_SHORT).show();
+                }
                 ParseUser.logInInBackground(edtEmail.getText().toString(), edtPassword.getText().toString(), new LogInCallback() {
                     @Override
                     public void done(ParseUser user, ParseException e) {
@@ -58,5 +72,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             default:
                 break;
         }
+    }
+
+    public void loginLayoutTapped(View view)    {
+        try {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+
+        }   catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }
