@@ -54,6 +54,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         if (e == null)  {
                             if(user != null)    {
                                 Toast.makeText(LoginActivity.this, ParseUser.getCurrentUser().getUsername() + " is logged in successfully", Toast.LENGTH_SHORT).show();
+                                transitionToSocialMediaActivity();
                             }   else    {
                                 Toast.makeText(LoginActivity.this, "User not found", Toast.LENGTH_SHORT).show();
                             }
@@ -84,4 +85,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
     }
-}
+
+    public void transitionToSocialMediaActivity()   {
+        Intent intent = new Intent(LoginActivity.this, SocialMediaActivity.class);
+        startActivity(intent);
+        }
+    }
