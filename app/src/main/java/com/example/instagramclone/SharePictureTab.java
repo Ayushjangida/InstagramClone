@@ -2,6 +2,7 @@ package com.example.instagramclone;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -96,6 +97,9 @@ public class SharePictureTab extends Fragment implements View.OnClickListener {
                         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                         receivedImageBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
                         byte[] bytes = byteArrayOutputStream.toByteArray();
+                        final ProgressDialog dialog = new ProgressDialog(getContext());
+                        dialog.setMessage("Loading...");
+                        dialog.show();
                         ParseFile parseFile = new ParseFile("pic.png", bytes);
                         ParseObject parseObject = new ParseObject("photo");
                         parseObject.put("picture", parseFile);
@@ -106,7 +110,10 @@ public class SharePictureTab extends Fragment implements View.OnClickListener {
                             public void done(ParseException e) {
                                 if(e == null)   {
                                     Toast.makeText(getContext(), "Image saved successfully!", Toast.LENGTH_SHORT).show();
-                                }   else    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }   else   {
+                                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                                dialog.dismiss();
                             }
                         });
                     }
